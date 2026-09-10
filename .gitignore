@@ -1,0 +1,13 @@
+# Dependensi & hasil build
+node_modules/
+dist/
+
+# Tangkapan layar dari scripts/shoot.mjs — bisa dibuat ulang kapan saja,
+# jadi tidak perlu ikut disimpan. Jalankan `node --experimental-websocket
+# scripts/shoot.mjs` untuk mengisinya kembali.
+shots/
+
+# Sampah editor / OS
+.DS_Store
+Thumbs.db
+*.log
