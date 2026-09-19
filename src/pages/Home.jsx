@@ -15,6 +15,9 @@ const HERO = findProduct('jaket-twill') ?? PRODUCTS[0]
 function CategoryStrip() {
   const cards = CATEGORIES.filter((c) => c.id !== 'semua').map((c) => {
     const items = PRODUCTS.filter((p) => p.category === c.id)
+    // An empty category has no photo to show and no floor price — rendering it
+    // would crash on `items[0].photo`, so it is skipped instead.
+    if (items.length === 0) return null
     return {
       ...c,
       count: items.length,
@@ -24,7 +27,7 @@ function CategoryStrip() {
       // what is actually inside the category.
       photo: items[0].photo,
     }
-  })
+  }).filter(Boolean)
 
   return (
     <motion.div
@@ -243,7 +246,7 @@ export default function Home() {
       </section>
 
       {/* ---- categories ---- */}
-      <section className="wrap mt-20 md:mt-28">
+      <section className="wrap mt-20">
         <SectionHead label="Kategori" title="Mulai dari sini" />
         <div className="mt-10">
           <CategoryStrip />
@@ -251,7 +254,7 @@ export default function Home() {
       </section>
 
       {/* ---- featured ---- */}
-      <section className="wrap mt-20 md:mt-28">
+      <section className="wrap mt-20">
         <SectionHead
           label="Paling dicari"
           title="Terlaris bulan ini"
@@ -262,7 +265,7 @@ export default function Home() {
       </section>
 
       {/* ---- editorial note ---- */}
-      <section className="wrap mt-20 md:mt-28">
+      <section className="wrap mt-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -282,7 +285,7 @@ export default function Home() {
       </section>
 
       {/* ---- new arrivals ---- */}
-      <section className="wrap mt-20 md:mt-28">
+      <section className="wrap mt-20">
         <SectionHead
           label="Baru masuk"
           title="Baru minggu ini"

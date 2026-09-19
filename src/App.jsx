@@ -6,6 +6,8 @@ import CartDrawer from './components/CartDrawer'
 import Home from './pages/Home'
 import Catalog from './pages/Catalog'
 import Product from './pages/Product'
+import Cart from './pages/Cart'
+import Payment from './pages/Payment'
 import { useRoute, matchRoute, navigate } from './lib/router'
 import { useDocumentTitle } from './hooks/useDocumentTitle'
 import { pageTransition } from './lib/motion'
@@ -38,7 +40,11 @@ export default function App() {
       <div className="ground-mesh" aria-hidden="true" />
 
       <div className="relative z-10 flex min-h-dvh flex-col">
-        <Header onOpenCart={() => setCartOpen(true)} route={path} />
+        <Header
+          onOpenCart={() => setCartOpen(true)}
+          onNavigate={() => setCartOpen(false)}
+          route={path}
+        />
 
         <main id="main" className="flex-1">
           {/* mode="wait" so the outgoing page finishes leaving before the next
@@ -64,6 +70,8 @@ export default function App() {
               {route.name === 'home' && <Home />}
               {route.name === 'catalog' && <Catalog kategori={route.params.kategori} />}
               {route.name === 'product' && <Product key={route.params.id} id={route.params.id} />}
+              {route.name === 'cart' && <Cart />}
+              {route.name === 'payment' && <Payment />}
               {route.name === 'notfound' && <NotFound />}
             </motion.div>
           </AnimatePresence>

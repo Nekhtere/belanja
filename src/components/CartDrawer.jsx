@@ -186,10 +186,22 @@ export default function CartDrawer({ open, onClose }) {
                     <span className="tnum type-h3 text-[1.125rem]">{formatPrice(subtotal)}</span>
                   </div>
                   <p className="mt-1.5 text-[0.75rem] type-muted">
-                    Ongkos kirim dihitung saat pembayaran.
+                    Ongkos kirim dihitung di halaman keranjang.
                   </p>
-                  <button type="button" className="btn btn-ink btn-block mt-4">
-                    Lanjut ke pembayaran
+
+                  {/* The drawer's job is a quick look; the cart page is where
+                      the order is actually assembled. This button used to be a
+                      dead stub — it now goes somewhere, which is the minimum a
+                      button owes the person pressing it. */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose()
+                      navigate('/keranjang')
+                    }}
+                    className="btn btn-ink btn-block mt-4"
+                  >
+                    Lihat keranjang &amp; bayar
                   </button>
                   <button
                     type="button"

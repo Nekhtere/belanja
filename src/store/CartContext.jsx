@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer } from 'react'
+import { subtotalOf } from '../lib/checkout'
 
 /**
  * Cart state.
@@ -9,6 +10,12 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useReducer 
  *
  * Line identity is a composite key, because the same shirt in M/black and
  * L/white are two different lines and must not collapse into one.
+ *
+ * The subtotal is NOT computed here any more — it is imported from
+ * lib/checkout.js. That is deliberate. The moment checkout added shipping and
+ * a promo, there were two additions that had to agree, and the failure mode
+ * is a total that is quietly wrong rather than a crash. One implementation,
+ * imported by both, is the only version of this that cannot drift.
  */
 
 const CartContext = createContext(null)
@@ -60,7 +67,17 @@ function init() {
     // tampered payload must not be able to produce two lines with one key.
     return parsed
       .filter((l) => l && typeof l.id === 'string' && Number.isFinite(l.qty))
-      .map((l) => ({ ...l, key: lineKey(l) }))
+      .map((l) => ({
+        ...l,
+        // Clamp what was stored: a hand-edited or corrupt payload could carry
+        // a negative, fractional or four-digit quantity, and everything
+        // downstream (line price, free-shipping math, the +/− controls)
+        // assumes 1–99 whole units.
+        qty: Math.min(99, Math.max(1, Math.round(l.qty))),
+        // Re-derive the key rather than trusting what was stored — a stale or
+        // tampered payload must not be able to produce two lines with one key.
+        key: lineKey(l),
+      }))
   } catch {
     return []
   }
@@ -85,7 +102,8 @@ export function CartProvider({ children }) {
 
   const value = useMemo(() => {
     const count = lines.reduce((n, l) => n + l.qty, 0)
-    const subtotal = lines.reduce((n, l) => n + l.price * l.qty, 0)
+    // Imported, not reimplemented — see the note at the top of this file.
+    const subtotal = subtotalOf(lines)
     return { lines, count, subtotal, addItem, setQty, removeItem, clear }
   }, [lines, addItem, setQty, removeItem, clear])
 

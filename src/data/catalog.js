@@ -78,6 +78,25 @@ const photo = (name) => {
   return { lg, sm: PHOTOS[`../assets/produk/${name}-sm.jpg`] }
 }
 
+/**
+ * Grup informasi footer — teks mati, demikian pula sengajanya.
+ *
+ * Ditempatkan di data (bukan inline di Footer.jsx) bersama katalog agar satu
+ * perubahan daftar cukup dari satu tempat, dan agar Footer.jsx tetap hanya
+ * soal tata letak. Ini bukan kategori produk: kategori tidak ada di footer
+ * dengan sengaja — mereka tinggal di header, menu mobile, dan CTA halaman.
+ */
+export const INFORMASI = [
+  'Cara memesan',
+  'Pengiriman',
+  'Penukaran',
+  'Panduan ukuran',
+  'Tentang kami',
+  'Bahan & perawatan',
+  'Keberlanjutan',
+  'Kontak',
+]
+
 export const CATEGORIES = [
   { id: 'semua', label: 'Semua' },
   { id: 'pakaian', label: 'Pakaian' },
@@ -86,6 +105,14 @@ export const CATEGORIES = [
   { id: 'aksesori', label: 'Aksesori' },
 ]
 
+/**
+ * `colorNames` pairs each hex in `colors` with the name the shopper reads.
+ * Written per product, not drawn from a shared positional list: the first
+ * version assigned names by index ('Natural', 'Hitam', 'Abu', …), which
+ * labelled kemeja's white swatch "Abu" and jaket's olive one "Natural" —
+ * and made the review variants quote colours the shop does not sell.
+ * The names here match the variants quoted in data/reviews.js.
+ */
 export const PRODUCTS = [
   {
     id: 'kaos-katun-berat',
@@ -94,6 +121,7 @@ export const PRODUCTS = [
     price: 189000,
     photo: photo('kaos'),
     colors: ['#f4f4f2', '#141413', '#8b8b83'],
+    colorNames: ['Natural', 'Hitam', 'Abu'],
     sizes: ['S', 'M', 'L', 'XL'],
     material: 'Katun combed 24s',
     tag: 'Terlaris',
@@ -113,6 +141,7 @@ export const PRODUCTS = [
     price: 429000,
     photo: photo('kemeja'),
     colors: ['#e8e4d9', '#3c4a52', '#ffffff'],
+    colorNames: ['Krem', 'Navy', 'Putih'],
     sizes: ['S', 'M', 'L', 'XL'],
     material: 'Linen 100%',
     tag: 'Baru',
@@ -132,6 +161,7 @@ export const PRODUCTS = [
     price: 685000,
     photo: photo('jaket'),
     colors: ['#2f3a33', '#141413', '#7a6a52'],
+    colorNames: ['Zaitun', 'Hitam', 'Coklat'],
     sizes: ['M', 'L', 'XL'],
     material: 'Twill katun 11 oz',
     blurb:
@@ -151,6 +181,7 @@ export const PRODUCTS = [
     originalPrice: 699000,
     photo: photo('dress'),
     colors: ['#dfd8c8', '#2b3a45'],
+    colorNames: ['Krem', 'Navy'],
     sizes: ['S', 'M', 'L'],
     material: 'Linen–viskosa',
     blurb:
@@ -169,6 +200,7 @@ export const PRODUCTS = [
     price: 389000,
     photo: photo('celana'),
     colors: ['#141413', '#5c5648', '#d8d3c8'],
+    colorNames: ['Hitam', 'Abu', 'Krem'],
     sizes: ['28', '30', '32', '34'],
     material: 'Poly–twill',
     blurb:
@@ -187,6 +219,7 @@ export const PRODUCTS = [
     price: 259000,
     photo: photo('tote'),
     colors: ['#e3ded1', '#141413', '#4a5a44'],
+    colorNames: ['Natural', 'Hitam', 'Zaitun'],
     material: 'Kanvas katun 16 oz',
     tag: 'Terlaris',
     blurb:
@@ -205,6 +238,7 @@ export const PRODUCTS = [
     price: 749000,
     photo: photo('ransel'),
     colors: ['#141413', '#3a4a5a', '#6b6357'],
+    colorNames: ['Hitam', 'Navy', 'Coklat'],
     material: 'Kanvas berlapis',
     tag: 'Baru',
     blurb:
@@ -223,6 +257,7 @@ export const PRODUCTS = [
     price: 465000,
     photo: photo('sling'),
     colors: ['#4a3423', '#141413'],
+    colorNames: ['Coklat', 'Hitam'],
     material: 'Kulit sapi nabati',
     blurb:
       'Kulit samak nabati yang menggelap dan membentuk pola pemakaian. Cukup untuk dompet, ponsel, dan kunci.',
@@ -240,6 +275,7 @@ export const PRODUCTS = [
     price: 720000,
     photo: photo('parfum-cedar'),
     colors: ['#d9d4c8'],
+    colorNames: ['Krem'],
     sizes: ['30 ml', '50 ml', '100 ml'],
     material: 'Eau de parfum',
     tag: 'Terlaris',
@@ -260,6 +296,7 @@ export const PRODUCTS = [
     price: 680000,
     photo: photo('parfum-neroli'),
     colors: ['#e6e0d2'],
+    colorNames: ['Krem'],
     sizes: ['30 ml', '50 ml'],
     material: 'Eau de parfum',
     blurb:
@@ -280,6 +317,7 @@ export const PRODUCTS = [
     originalPrice: 1490000,
     photo: photo('jam'),
     colors: ['#c9c5ba', '#141413'],
+    colorNames: ['Krem', 'Hitam'],
     material: 'Stainless 316L',
     blurb:
       'Dial bersih tanpa angka, 36 mm — ukuran yang pas untuk hampir semua pergelangan, bukan hanya yang besar.',
@@ -297,6 +335,7 @@ export const PRODUCTS = [
     price: 175000,
     photo: photo('topi'),
     colors: ['#e3ded1', '#141413', '#5a6b52'],
+    colorNames: ['Natural', 'Hitam', 'Zaitun'],
     material: 'Kanvas katun',
     blurb:
       'Enam panel dengan tali pengatur logam. Bentuknya tetap kokoh, tidak lemas seperti topi murah.',

@@ -14,8 +14,12 @@ import { useCart } from '../store/CartContext'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { EASE, riseIn, stagger, viewport } from '../lib/motion'
 
-/** Colour swatches are labelled by name so the choice is not colour-only. */
-const COLOR_NAMES = ['Natural', 'Hitam', 'Abu', 'Navy', 'Zaitun', 'Coklat', 'Krem']
+/**
+ * Fallback colour names, used only when a product has no `colorNames` array.
+ * The real names live per product in data/catalog.js — a shared positional
+ * list labelled a white swatch "Abu" and an olive one "Natural".
+ */
+const FALLBACK_COLOR_NAMES = ['Natural', 'Hitam', 'Abu', 'Navy', 'Zaitun', 'Coklat', 'Krem']
 
 export default function Product({ id }) {
   const product = findProduct(id)
@@ -73,7 +77,12 @@ export default function Product({ id }) {
   const onSale = Boolean(product.originalPrice)
   const off = discountPercent(product.price, product.originalPrice)
   const colorHex = product.colors[colorIndex]
-  const colorName = COLOR_NAMES[colorIndex % COLOR_NAMES.length]
+  // Prefer the product's own names; the fallback keeps a half-migrated entry
+  // readable instead of printing "undefined" in the fieldset legend.
+  const colorName =
+    product.colorNames?.[colorIndex] ?? FALLBACK_COLOR_NAMES[colorIndex % FALLBACK_COLOR_NAMES.length]
+  const colorNameFor = (i) =>
+    product.colorNames?.[i] ?? FALLBACK_COLOR_NAMES[i % FALLBACK_COLOR_NAMES.length]
 
   const stock = stockFor(product.id)
   const stockInfo = stockLabel(stock)
@@ -106,7 +115,10 @@ export default function Product({ id }) {
                 e.preventDefault()
                 navigate('/')
               }}
-              className="ul-hover"
+              // Padding + min-h so the breadcrumb clears 24px as a tap target —
+              // at 15px tall a crumb link was a miss-prone target on a phone.
+              // The negative margin keeps the text aligned with the crumbs.
+              className="ul-hover -mx-1 inline-block min-h-6 px-1 py-1 align-baseline"
             >
               Beranda
             </a>
@@ -119,7 +131,7 @@ export default function Product({ id }) {
                 e.preventDefault()
                 navigate(`/katalog?kategori=${product.category}`)
               }}
-              className="ul-hover capitalize"
+              className="ul-hover -mx-1 inline-block min-h-6 px-1 py-1 align-baseline capitalize"
             >
               {product.category}
             </a>
@@ -234,7 +246,7 @@ export default function Product({ id }) {
                       key={hex + i}
                       type="button"
                       onClick={() => setColorIndex(i)}
-                      aria-label={COLOR_NAMES[i % COLOR_NAMES.length]}
+                      aria-label={colorNameFor(i)}
                       aria-pressed={on}
                       className={`grid size-10 place-items-center rounded-full border transition-all duration-200 ${
                         on

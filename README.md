@@ -73,13 +73,16 @@ src/
   data/reviews.js       ulasan awal 12 barang + summarize()
   data/chat.js          balasan asisten; jawaban stok dihasilkan, bukan ditulis
   store/CartContext.jsx keranjang: reducer + localStorage
+  store/CheckoutContext.jsx  alamat, pengiriman, promo, metode & pesanan
   store/ReviewsContext.jsx  satu sumber untuk skor & daftar ulasan
   lib/router.js         hash router (~55 baris, tanpa dependensi)
   lib/format.js         format rupiah, hitung diskon, formatRating
+  lib/checkout.js       aritmetika checkout: subtotal, ongkir, promo, total
   assets/produk/        24 foto produk (12 barang × 1000px & 500px)
   components/           Header, Footer, ProductCard, ProductPhoto, CartDrawer,
-                        Stars, Reviews, AdminChat
-  pages/                Home, Catalog, Product
+                        Stars, Reviews, AdminChat, ChoiceCard, OrderSummary,
+                        DemoNotice
+  pages/                Home, Catalog, Product, Cart, Payment
 scripts/verify.mjs      uji otomatis via Chrome DevTools Protocol
 scripts/verify-produk.mjs   uji rating + stok + chat di halaman produk
 scripts/verify-ulasan.mjs   jalankan jalur interaktif: tulis ulasan, tanya stok
@@ -303,7 +306,22 @@ grid-nya diubah, `sizes` di `ProductPhoto.jsx` ikut diubah.
 **Radius, bukan garis.** Versi pertama memakai sudut 2px dan border 1px di
 mana-mana — itu yang membuat halaman terasa "flat" dan tanpa identitas. Sudut
 kini 12–32px, dan bayangan berlapis (tiga lapis, opasitas rendah, bertinta
-hangat) menggantikan garis sebagai pemisah kedalaman.
+sejuk) menggantikan garis sebagai pemisah kedalaman.
+
+**Footer colophon, bukan peta situs.** Footer sengaja tidak memuat link
+kategori. Kategori sudah bisa dijangkau dari header sticky yang selalu
+menempel, menu mobile yang daftarnya identik, tile kategori di beranda,
+breadcrumb produk, dan CTA "Lihat katalog" — mengulangnya di footer hanya
+menambah redundansi. Argumen SEO untuk link footer juga tidak berlaku di
+sini: routing memakai hash, jadi rute tidak diindeks mesin pencari sebagai
+halaman terpisah. Isinya kini: identitas toko, satu grup **"Informasi"**
+(teks mati — demo tanpa server — karena itu ia bukan `<nav>`; nav yang
+tidak menavigasi adalah janji palsu ke screen reader), dan baris legal.
+Daftarnya hidup di `INFORMASI` di `data/catalog.js`. Ritme vertikal juga
+dirapatkan (`mt-20` antar-section beranda, `py-9` pada panel footer,
+legal jadi satu blok center di mobile) dan grid mobile melipat Bantuan &
+Perusahaan berdampingan — hasilnya footer selalu di bawah satu layar
+penuh: ±330px di desktop, ±480px di HP. Terukur, bukan dikira-kira.
 
 ## Satu jebakan yang perlu diketahui
 

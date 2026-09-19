@@ -12,7 +12,7 @@ const LINKS = [
   { label: 'Parfum', to: '/katalog?kategori=parfum' },
 ]
 
-export default function Header({ onOpenCart, route }) {
+export default function Header({ onOpenCart, onNavigate, route }) {
   const { count } = useCart()
   const [menuOpen, setMenuOpen] = useState(false)
   const [condensed, setCondensed] = useState(false)
@@ -53,6 +53,12 @@ export default function Header({ onOpenCart, route }) {
 
   const go = (to) => (e) => {
     e.preventDefault()
+    // Tell the app a navigation is happening BEFORE the hash changes. The
+    // header cannot see the cart drawer's open state, and the drawer's
+    // "close on route change" effect does not fire when the route is already
+    // this one — tapping the wordmark from the home page would otherwise
+    // leave the drawer sitting over the page it just "navigated" to.
+    onNavigate?.()
     navigate(to)
   }
 

@@ -70,6 +70,7 @@ export function matchRoute(path) {
     return { name: 'product', key: `product:${parts[1]}`, params: { id: parts[1] } }
   }
   if (parts[0] === 'keranjang') return { name: 'cart', key: 'cart', params: {} }
+  if (parts[0] === 'pembayaran') return { name: 'payment', key: 'payment', params: {} }
   return { name: 'notfound', key: 'notfound', params: {} }
 }
 

@@ -67,16 +67,43 @@ export default function Catalog({ kategori = 'semua' }) {
           reachable on a long grid — the one place on this page where glass
           earns its cost, because it genuinely overlaps content. */}
       <div className="glass sticky top-[4.75rem] z-30 mt-8 flex flex-col gap-4 rounded-[24px] px-4 py-3.5 lg:flex-row lg:items-center lg:justify-between">
-        {/* category pills — a real radio group so arrow keys work */}
-        <div role="radiogroup" aria-label="Kategori" className="flex flex-wrap gap-2">
+        {/* category pills — a real radio group. Roving tabindex + arrow keys
+            below make the pattern true: Tab lands on the selected pill only,
+            arrows move both selection and focus, Home/End jump to the ends. */}
+        <div
+          role="radiogroup"
+          aria-label="Kategori"
+          className="flex flex-wrap gap-2"
+          onKeyDown={(e) => {
+            if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key))
+              return
+            e.preventDefault()
+            const ids = CATEGORIES.map((c) => c.id)
+            const i = Math.max(0, ids.indexOf(active.id))
+            const next =
+              e.key === 'Home'
+                ? 0
+                : e.key === 'End'
+                  ? ids.length - 1
+                  : (i + (e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1) + ids.length) %
+                    ids.length
+            const id = ids[next]
+            navigate(id === 'semua' ? '/katalog' : `/katalog?kategori=${id}`)
+            // Focus follows the selection, so the next arrow press keeps
+            // working from the pill the reader is now on.
+            document.getElementById(`kategori-${id}`)?.focus()
+          }}
+        >
           {CATEGORIES.map((c) => {
             const on = c.id === active.id
             return (
               <button
                 key={c.id}
+                id={`kategori-${c.id}`}
                 type="button"
                 role="radio"
                 aria-checked={on}
+                tabIndex={on ? 0 : -1}
                 onClick={() =>
                   navigate(c.id === 'semua' ? '/katalog' : `/katalog?kategori=${c.id}`)
                 }
@@ -136,6 +163,10 @@ export default function Catalog({ kategori = 'semua' }) {
       </div>
 
       {/* ---- grid ---- */}
+      {/* An sr-only h2 sits between the h1 and the cards' h3 names: without it
+          the page's heading order jumps H1 → H3, which reads as a structural
+          mistake to a screen reader navigating by heading level. */}
+      <h2 className="sr-only">Barang</h2>
       {results.length === 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 12 }}

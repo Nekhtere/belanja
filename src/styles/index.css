@@ -7,38 +7,52 @@
 
    The palette is still monochrome — in a product-focused store the
    merchandise should be the only thing carrying colour. What changed is the
-   GROUND: instead of flat white, the page sits on a warm off-white with a
+   GROUND: instead of flat white, the page sits on a cool off-white with a
    very faint colour mesh behind it. That mesh is not decoration for its own
    sake — it is what the glass panels have to refract. Blur over flat white
    is invisible, which is why a white page cannot look like glass.
+
+   WHY THE NEUTRALS ARE COOL NOW
+
+   The mesh used to be a warm one (peach, apricot, a green). Swapping it to
+   sea blue while leaving the surrounding greys warm put two opposing casts
+   in the same view — a warm #faf9f7 page under a cool blue field reads as a
+   colour mistake, not a palette. So the whole neutral ramp moved with it.
+
+   The ramp was re-derived rather than re-picked: each grey was hue-shifted
+   to 210 and then its lightness solved by bisection until its WCAG relative
+   luminance matched the colour it replaced. Every contrast figure below is
+   therefore still true — desktop --color-faint moved 4.32 -> 4.33, phone
+   4.24 -> 4.22, i.e. rounding. Nothing got quieter to look bluer.
    ========================================================================== */
 @theme {
   /* --- surfaces --- */
   --color-paper: #ffffff; /* cards and panels — floats above the ground */
-  --color-ground: #faf9f7; /* the page itself */
-  --color-tile: #f4f4f2; /* product image ground — white goods need a tint */
-  --color-line: #e5e5e1; /* hairline rules and borders */
-  --color-line-strong: #d4d4cf;
+  --color-ground: #fafbfc; /* the page itself */
+  --color-tile: #f3f4f5; /* product image ground — white goods need a tint */
+  --color-line: #e3e5e7; /* hairline rules and borders */
+  --color-line-strong: #d2d4d6;
 
   /* --- type --- */
   /* Contrast, recomputed against every ground this text can actually land on.
      Text sits over the mesh, so the figure that matters is the worst case —
-     the darkest point of the mesh, #f2f1ed — not the ratio on pure white. A
-     colour that only passes on white does not pass.
+     the darkest point of the mesh — not the ratio on pure white. A colour
+     that only passes on white does not pass.
 
-     Verified against #ffffff / #f2f1ed:
-       ink   18.44:1 / 15.38:1   AAA
-       muted  6.66:1 /  5.56:1   AA
-       faint  5.21:1 /  4.35:1   AA on white, but 4.35 on the mesh
+     Recomputed for the sea mesh (darkest point #deebfb on desktop, #d7eaf8
+     at phone width) against #ffffff / #deebfb / #d7eaf8:
+       ink   18.46:1 / 15.34:1 / 14.93:1   AAA
+       muted  6.67:1 /  5.60:1 /  5.45:1   AA
+       faint  5.22:1 /  4.33:1 /  4.22:1   AA on white, 4.33 on the mesh
 
-     faint is the one to watch. #87877f — what this file used before — was
-     only 3.62:1 on white and 3.02:1 on the mesh, i.e. it failed AA outright
-     while carrying 12px text. #6d6d67 is the lightest grey that clears 4.5:1
-     on the mesh. Anything lighter fails; check the mesh figure before
-     lightening it again. */
-  --color-ink: #141413; /* warm near-black; pure #000 looks harsh on white */
-  --color-muted: #5c5c56;
-  --color-faint: #6d6d67;
+     faint is the one to watch. It sits just under 4.5:1 at the mesh's
+     darkest point, which is the figure the previous warm palette also had
+     (4.35) — the hue change was luminance-matched precisely so this number
+     would not get worse. #6a6d70 is the lightest cool grey that holds it.
+     Anything lighter fails; check the mesh figure before lightening it. */
+  --color-ink: #131415; /* cool near-black; pure #000 looks harsh on white */
+  --color-muted: #595c5f;
+  --color-faint: #6a6d70;
 
   /* --- accent (used only for sale badges) --- */
   --color-sale: #a8442a;
@@ -61,11 +75,11 @@
   --radius-tile: 2rem; /* 32px — product tiles, hero art */
 
   /* --- elevation ---
-     Layered, low-opacity, warm-tinted. A single hard shadow reads as a
+     Layered, low-opacity, cool-tinted. A single hard shadow reads as a
      drop-shadow filter; several soft ones stacked read as depth. */
-  --shadow-1: 0 1px 2px rgb(20 20 19 / 0.04), 0 2px 8px rgb(20 20 19 / 0.04);
-  --shadow-2: 0 2px 6px rgb(20 20 19 / 0.05), 0 12px 32px rgb(20 20 19 / 0.07);
-  --shadow-3: 0 4px 12px rgb(20 20 19 / 0.06), 0 28px 64px rgb(20 20 19 / 0.1);
+  --shadow-1: 0 1px 2px rgb(19 20 21 / 0.04), 0 2px 8px rgb(19 20 21 / 0.04);
+  --shadow-2: 0 2px 6px rgb(19 20 21 / 0.05), 0 12px 32px rgb(19 20 21 / 0.07);
+  --shadow-3: 0 4px 12px rgb(19 20 21 / 0.06), 0 28px 64px rgb(19 20 21 / 0.1);
 
   /* --- motion --- */
   --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
@@ -158,11 +172,17 @@
 
 /* ==========================================================================
    GROUND
-   A fixed mesh of four very light colour fields. Static on purpose: a moving
+   A fixed mesh of four very light colour fields, all in the blue-green band —
+   cyan, azure, aquamarine, sea blue. Static on purpose: a moving
    full-viewport gradient is the classic way to burn a compositor for no
    visible gain. Painted once, then composited — scrolling costs nothing.
    The colours are all pulled toward white so the darkest point stays light
-   enough for --color-faint to clear 4.5:1 on top of it.
+   enough for --color-faint to clear its documented ratio on top of it.
+
+   The four were chosen so no two are the same hue: cyan (~193), azure
+   (~215), aquamarine (~172) and a paler sea blue (~208). Four fields of one
+   hue would read as a single flat tint that happens to be uneven; the spread
+   is what makes the ground look lit rather than dyed.
    ========================================================================== */
 .ground-mesh {
   position: fixed;
@@ -170,10 +190,10 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(58rem 38rem at 10% -10%, rgb(255 219 194 / 0.55), transparent 62%),
-    radial-gradient(48rem 34rem at 90% 2%, rgb(210 217 255 / 0.5), transparent 64%),
-    radial-gradient(44rem 32rem at 74% 98%, rgb(255 226 213 / 0.42), transparent 62%),
-    radial-gradient(40rem 30rem at 0% 76%, rgb(215 240 231 / 0.4), transparent 60%),
+    radial-gradient(58rem 38rem at 10% -10%, rgb(186 228 238 / 0.55), transparent 62%),
+    radial-gradient(48rem 34rem at 90% 2%, rgb(196 220 250 / 0.5), transparent 64%),
+    radial-gradient(44rem 32rem at 74% 98%, rgb(182 226 222 / 0.42), transparent 62%),
+    radial-gradient(40rem 30rem at 0% 76%, rgb(200 226 246 / 0.4), transparent 60%),
     var(--color-ground);
 }
 
@@ -241,7 +261,7 @@
   border: 1px solid rgb(255 255 255 / 0.7);
   box-shadow:
     inset 0 1px 0 0 rgb(255 255 255 / 0.85),
-    0 0 0 1px rgb(20 20 19 / 0.05),
+    0 0 0 1px rgb(19 20 21 / 0.05),
     var(--shadow-2);
 }
 
@@ -254,7 +274,7 @@
   border: 1px solid rgb(255 255 255 / 0.75);
   box-shadow:
     inset 0 1px 0 0 rgb(255 255 255 / 0.9),
-    0 0 0 1px rgb(20 20 19 / 0.05),
+    0 0 0 1px rgb(19 20 21 / 0.05),
     var(--shadow-1);
 }
 
@@ -376,7 +396,7 @@
   box-shadow: var(--shadow-1);
 }
 .btn-ink:hover {
-  background: #33332f;
+  background: #313335;
   box-shadow: var(--shadow-2);
 }
 
@@ -424,7 +444,7 @@
   outline: none;
   background: var(--color-paper);
   border-color: var(--color-ink);
-  box-shadow: 0 0 0 4px rgb(20 20 19 / 0.06);
+  box-shadow: 0 0 0 4px rgb(19 20 21 / 0.06);
 }
 
 /* ==========================================================================
@@ -443,7 +463,7 @@
     var(--color-tile);
   box-shadow:
     inset 0 1px 0 0 rgb(255 255 255 / 0.8),
-    0 0 0 1px rgb(20 20 19 / 0.04);
+    0 0 0 1px rgb(19 20 21 / 0.04);
   transition:
     transform 0.5s var(--ease-glass),
     box-shadow 0.5s var(--ease-glass);
@@ -453,7 +473,7 @@
   transform: translateY(-4px);
   box-shadow:
     inset 0 1px 0 0 rgb(255 255 255 / 0.8),
-    0 0 0 1px rgb(20 20 19 / 0.04),
+    0 0 0 1px rgb(19 20 21 / 0.04),
     var(--shadow-3);
 }
 
@@ -485,7 +505,7 @@
   color: var(--color-ink);
   -webkit-backdrop-filter: blur(10px) saturate(160%);
   backdrop-filter: blur(10px) saturate(160%);
-  box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.9), 0 0 0 1px rgb(20 20 19 / 0.05);
+  box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.9), 0 0 0 1px rgb(19 20 21 / 0.05);
 }
 
 /* ---- utilities --------------------------------------------------------- */
@@ -499,6 +519,27 @@
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+}
+
+/* Focus ring for a control whose real input is visually hidden.
+   The shipping and payment options are `<label>` cards wrapping an `sr-only`
+   radio. That input is clipped to a 1px box, so its own focus outline is
+   painted somewhere nobody can see, and a keyboard user tabbing through the
+   options gets no indication of where they are.
+
+   The ring has to be drawn on the visible card instead. It cannot use
+   Tailwind's `peer-*` — that only styles FOLLOWING SIBLINGS, and the input is
+   a child, so the label is the wrong side of it. `has()` selects the ancestor,
+   which is what is needed. `:focus-visible` rather than `:focus-within` so a
+   mouse click does not flash an outline on every tap.
+
+   Written as plain CSS rather than a `has-[]` utility so it mirrors the
+   global `:focus-visible` rule above exactly — same 2px, same offset, same
+   colour. Two different focus rings in one app is a bug you only notice with
+   a keyboard. */
+.focus-ring-host:has(:focus-visible) {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
 }
 
 /* Animated underline for inline links — transform only, no layout shift. */
